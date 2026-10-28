@@ -1,0 +1,392 @@
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ساندویچی منصور مزه؛ طعمی خاطره‌انگیز در جوادیه، با تنوع ساندویچ و پذیرایی گرم.">
+  <title>ساندویچی منصور مزه | طعمی که می‌ماند</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap');
+
+    :root {
+      --bg: #101010;
+      --panel: #191919;
+      --red: #e52b2b;
+      --yellow: #ffd32a;
+      --white: #fffaf0;
+      --muted: #d2cec4;
+      --line: rgba(255, 211, 42, .3);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 10% 5%, rgba(229,43,43,.14), transparent 28rem),
+        radial-gradient(ellipse at 90% 45%, rgba(255,211,42,.08), transparent 30rem),
+        var(--bg);
+      color: var(--white);
+      font-family: "Vazirmatn", Tahoma, sans-serif;
+      line-height: 1.9;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    .container { width: min(1120px, calc(100% - 32px)); margin-inline: auto; }
+
+    .topbar {
+      background: var(--yellow);
+      color: #151515;
+      text-align: center;
+      padding: 7px 12px;
+      font-weight: 800;
+      font-size: .9rem;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(16,16,16,.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .brand { font-weight: 900; font-size: 1.15rem; }
+    .brand span { color: var(--yellow); }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 20px; color: var(--muted); font-size: .92rem; }
+    .nav-links a:hover { color: var(--yellow); }
+
+    .hero { padding: 74px 0 48px; }
+    .hero-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: clamp(28px, 6vw, 68px);
+      background:
+        linear-gradient(115deg, rgba(229,43,43,.14), transparent 48%),
+        linear-gradient(145deg, #202020, #111);
+      box-shadow: 0 22px 65px rgba(0,0,0,.25);
+    }
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      width: 250px;
+      height: 250px;
+      border: 32px solid rgba(255,211,42,.07);
+      border-radius: 50%;
+      left: -90px;
+      bottom: -135px;
+      pointer-events: none;
+    }
+    .eyebrow {
+      display: inline-block;
+      background: var(--yellow);
+      color: #161616;
+      border-radius: 999px;
+      padding: 5px 14px;
+      font-size: .85rem;
+      font-weight: 900;
+    }
+    h1 {
+      font-size: clamp(2.4rem, 7vw, 5.3rem);
+      line-height: 1.25;
+      margin: 18px 0 12px;
+      font-weight: 900;
+      letter-spacing: -1.5px;
+    }
+    h1 span { color: var(--yellow); text-shadow: 3px 3px 0 rgba(229,43,43,.7); }
+    .hero-copy { max-width: 690px; color: var(--muted); font-size: clamp(1rem, 2vw, 1.2rem); }
+    .hero-copy strong { color: var(--white); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 25px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-weight: 800;
+      transition: transform .2s, opacity .2s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--red); color: white; }
+    .btn-secondary { border: 1px solid var(--line); color: var(--yellow); }
+
+    section { padding: 42px 0; }
+    .section-heading { margin-bottom: 24px; }
+    .section-heading .kicker { color: var(--yellow); font-weight: 800; font-size: .9rem; }
+    h2 { margin: 2px 0 6px; font-size: clamp(1.7rem, 4vw, 2.7rem); line-height: 1.4; }
+    .section-heading p { color: var(--muted); margin: 0; max-width: 720px; }
+
+    .brand-gallery, .variety-gallery {
+      display: grid;
+      gap: 16px;
+    }
+    .brand-gallery { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .variety-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .photo-card {
+      overflow: hidden;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      margin: 0;
+    }
+    .photo-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      background: linear-gradient(135deg, #292929, #151515);
+    }
+    .photo-card figcaption { padding: 12px 14px; font-weight: 700; }
+    .photo-card figcaption span { display: block; color: var(--muted); font-size: .85rem; font-weight: 400; }
+
+    .menu-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .menu-item {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,255,255,.015));
+    }
+    .menu-item h3 { margin: 0 0 6px; color: var(--yellow); font-size: 1.12rem; }
+    .menu-item p { margin: 0; color: var(--muted); font-size: .94rem; }
+    .menu-note { margin-top: 18px; padding: 15px 18px; border-right: 4px solid var(--red); background: #1a1a1a; border-radius: 10px; color: var(--muted); }
+
+    .slogan {
+      margin-top: 22px;
+      padding: 25px;
+      text-align: center;
+      border-radius: 20px;
+      background: linear-gradient(100deg, #a91616, #e52b2b);
+      font-size: clamp(1.15rem, 3vw, 1.8rem);
+      font-weight: 900;
+    }
+    .slogan span { color: var(--yellow); }
+
+    .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .detail-card { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 23px; }
+    .detail-card h3 { margin: 0 0 12px; color: var(--yellow); }
+    .detail-card p { margin: 8px 0; color: var(--muted); overflow-wrap: anywhere; }
+    .detail-card strong { color: var(--white); }
+    .phone-list { display: grid; gap: 7px; margin-top: 8px; }
+    .phone-list a { direction: ltr; display: inline-block; width: fit-content; color: var(--white); font-weight: 800; }
+    .phone-list a:hover { color: var(--yellow); }
+    .contact-button { margin-top: 14px; }
+
+    footer { margin-top: 30px; border-top: 1px solid var(--line); padding: 22px 0; text-align: center; color: #aaa; font-size: .88rem; }
+    footer strong { color: var(--yellow); }
+
+    @media (max-width: 800px) {
+      .brand-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .photo-card img { height: 190px; }
+      .nav { align-items: flex-start; flex-direction: column; padding: 13px 0; gap: 8px; }
+      .nav-links { gap: 13px; }
+    }
+    @media (max-width: 560px) {
+      .container { width: min(100% - 22px, 1120px); }
+      .hero { padding-top: 28px; }
+      .hero-card { border-radius: 20px; }
+      .brand-gallery, .variety-gallery, .menu-grid, .details-grid { grid-template-columns: 1fr; }
+      .photo-card img { height: 220px; }
+      .nav-links { font-size: .84rem; }
+      .hero-actions .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">ساندویچی منصور مزه • منطقه‌های ۱۶، ۱۷، ۱۸ و ۱۹ تهران</div>
+
+  <header>
+    <div class="container nav">
+      <a class="brand" href="#home">ساندویچی <span>منصور مزه</span></a>
+      <nav class="nav-links" aria-label="منوی اصلی">
+        <a href="#about">معرفی ما</a>
+        <a href="#brand-gallery">گالری برند</a>
+        <a href="#menu">تنوع ساندویچ</a>
+        <a href="#contact">تماس و آدرس</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container">
+        <div class="hero-card">
+          <span class="eyebrow">طعم خوب، خاطره ماندگار</span>
+          <h1>ساندویچی<br><span>منصور مزه</span></h1>
+          <p class="hero-copy">
+            بعضی مزه‌ها فقط یک وعده غذا نیستند؛ <strong>خاطره‌ای خوشمزه‌اند که دوباره سراغشان می‌روید.</strong>
+            در منصور مزه، با انتخابی متنوع و فضایی دوستانه منتظر شما هستیم.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#menu">آشنایی با ساندویچ‌ها</a>
+            <a class="btn btn-secondary" href="#contact">راه‌های تماس و آدرس</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">قصه منصور مزه</span>
+          <h2>یک انتخاب خوشمزه برای وقت گرسنگی</h2>
+          <p>از یک میان‌وعده دلچسب تا یک وعده سیرکننده؛ تنوع ساندویچ‌ها برای سلیقه‌های مختلف آماده است. شما انتخاب کنید، ما با روی خوش پذیرای شما هستیم.</p>
+        </div>
+        <div class="menu-grid">
+          <article class="menu-item">
+            <h3>🥪 تنوع برای سلیقه‌های مختلف</h3>
+            <p>از طعم‌های کلاسیک تا انتخاب‌های پرملات؛ هر کسی می‌تواند گزینه دلخواهش را پیدا کند.</p>
+          </article>
+          <article class="menu-item">
+            <h3>❤️ مزه‌ای برای دورهمی</h3>
+            <p>برای وقت استراحت، گپ دوستانه یا وقتی که دلتان یک ساندویچ خوشمزه می‌خواهد.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="brand-gallery">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">گالری تصویری</span>
+          <h2>ساندویچی منصور مزه</h2>
+          <p>نگاهی به مغازه ساندویچی منصور مزه
+
+اینجا مغازه منصور مزه در محله جوادیه تهرانه؛ جایی که می‌تونی از نزدیک با محیط مغازه آشنا بشی و بخشی از حال‌وهوای اون رو ببینی. 🥪
+منصور مزه؛ منتظر دیدارتون هستیم!
+</p>
+        </div>
+        <div class="brand-gallery">
+          <figure class="photo-card">
+            <img src="images/shop-3.jpg" alt="images/shop-6.jpg" loading="lazy">
+            <figcaption>منصور مزه <span>طعم خوب، حال خوب</span></figcaption>
+          </figure>
+          <figure class="photo-card">
+            <img src="images/shop-4.jpg" alt="images/shop-5.jpg" loading="lazy">
+            <figcaption>مزه‌ای که می‌ماند <span>خاطره‌ای خوشمزه برای دوباره آمدن</span></figcaption>
+          </figure>
+          <figure class="photo-card">
+            <img src="images/shop-5.jpg" alt="images/shop-4.jpg" loading="lazy">
+            <figcaption>پاتوق خوشمزه‌ها <span>با روی خوش منتظر شما هستیم</span></figcaption>
+          </figure>
+          <figure class="photo-card">
+            <img src="images/shop-6.jpg" alt="images/shop-3.jpg" loading="lazy">
+            <figcaption>از جوادیه با عشق <span>همراه همیشگی لحظه‌های خوشمزه</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="menu">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">انتخاب با شماست</span>
+          <h2>تنوع ساندویچ</h2>
+          <p>ا🌭 این فقط بخشی از منوی خوشمزهٔ منصور مزه است!
+
+از ساندویچ‌های کلاسیک و بندری گرفته تا طعم‌های متنوع و دوست‌داشتنی؛ انتخاب‌های بیشتری هم منتظرته!
+
+برای دیدن تنوع بیشتر، سری به منصور مزه بزن!.</p>
+        </div>
+
+        <div class="menu-grid">
+          <article class="menu-item">
+            <h3>ساندویچ ویژه منصور مزه</h3>
+            <p>انتخابی پرملات برای وقتی که دلتان یک ساندویچ حسابی و خوش‌طعم می‌خواهد.</p>
+          </article>
+          <article class="menu-item">
+            <h3>ساندویچ ژامبون</h3>
+            <p>طعم آشنای ژامبون در کنار مخلفات تازه و ترکیبی دلچسب برای طرفداران مزه‌های کلاسیک.</p>
+          </article>
+          <article class="menu-item">
+            <h3>ساندویچ مرغ</h3>
+            <p>گزینه‌ای خوش‌خوراک برای دوست‌داران مرغ و ترکیب‌های خوشمزه و سیرکننده.</p>
+          </article>
+          <article class="menu-item">
+            <h3>ساندویچ بندری</h3>
+            <p>انتخابی تند و پرهیجان برای کسانی که طعم‌های ادویه‌ای و پرانرژی را دوست دارند.</p>
+          </article>
+          <article class="menu-item">
+            <h3>ساندویچ سوسیس</h3>
+            <p>یک انتخاب کلاسیک و دوست‌داشتنی برای وقت‌هایی که هوس یک ساندویچ خوشمزه کرده‌اید.</p>
+          </article>
+          <article class="menu-item">
+            <h3>ساندویچ قارچ و پنیر</h3>
+            <p>ترکیبی دلچسب برای طرفداران قارچ و پنیر؛ مناسب برای یک تجربه متفاوت و خوش‌طعم.</p>
+          </article>
+        </div>
+
+        <div class="menu-note">🌭 هر سلیقه‌ای، یک طعم دوست‌داشتنی!
+
+از ساندویچ‌های کلاسیک و خاطره‌انگیز تا طعم‌های تند و هیجان‌انگیز؛ اینجا قراره با هر لقمه، مزه‌ای متفاوت رو تجربه کنی!
+
+منصور مزه؛ یه انتخاب خوشمزه برای هر وقت که هوس ساندویچ کردی!</div>
+
+        <div class="variety-gallery" style="margin-top:18px">
+          <figure class="photo-card">
+            <img src="images/shop-1.jpg" alt="images/shop-1.jpg" loading="lazy">
+            <figcaption>تنوع ساندویچ‌ها <span>برای هر سلیقه، یک انتخاب خوشمزه</span></figcaption>
+          </figure>
+          <figure class="photo-card">
+            <img src="images/shop-2.jpg" alt="images/shop-2.jpg" loading="lazy">
+            <figcaption>وقت یک مزه خوب است <span>انتخاب کن و از لحظه‌ات لذت ببر</span></figcaption>
+          </figure>
+        </div>
+
+        <div class="slogan">گرسنه‌ای؟ وقتشه یه سر به <span>منصور مزه</span> بزنی! 😋</div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">منتظر دیدارتان هستیم</span>
+          <h2>تماس و آدرس</h2>
+          <p>برای هماهنگی یا پیدا کردن مسیر، از اطلاعات زیر استفاده کنید.</p>
+        </div>
+        <div class="details-grid">
+          <div class="detail-card">
+            <h3>📍 آدرس مغازه</h3>
+            <p><strong>تهران، جوادیه، نبش کوچه شهید سخی، پلاک ۱۰۶</strong></p>
+            <p>نام روی محل: اغذیه دهه ۶۰ دوستان / منصور مزه</p>
+            <p>محدوده فعالیت و شناخته‌شدن برند: مناطق ۱۶، ۱۷، ۱۸ و ۱۹ تهران</p>
+          </div>
+          <div class="detail-card">
+            <h3>☎️ تلفن و ساعت کاری</h3>
+            <p><strong>ساعت کاری:</strong> هر روز از ساعت ۱۴:۰۰ تا ۲۲:۳۰</p>
+            <p><strong>شماره‌های تماس:</strong></p>
+            <div class="phone-list">
+              <a href="tel:09389232776">۰۹۳۸۹۲۳۲۷۷۶</a>
+              <a href="tel:09023410978">۰۹۰۲۳۴۱۰۹۷۸</a>
+              <a href="tel:09129232776">۰۹۱۲۹۲۳۲۷۷۶</a>
+              <a href="tel:02155675673">۰۲۱۵۵۶۷۵۶۷۳ — تلفن مغازه</a>
+            </div>
+            <a class="btn btn-primary contact-button" href="tel:02155675673">تماس با مغازه</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <strong>ساندویچی منصور مزه</strong> — طعمی که می‌ماند • مناطق ۱۶، ۱۷، ۱۸ و ۱۹ تهران
+      <br>© تمامی حقوق محفوظ است.
+    </div>
+  </footer>
+</body>
+</html>
+'''
+
+path = Path("/mnt/data/index.html")
+path.write_text(html, encoding="utf-8")
+print(f"فایل ساخته شد: {path} | حجم: {path.stat().st_size:,} بایت")
