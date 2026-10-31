@@ -1,5 +1,3 @@
-from pathlib import Path
-
 html = r'''<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -386,7 +384,3 @@ html = r'''<!DOCTYPE html>
 </body>
 </html>
 '''
-
-path = Path("/mnt/data/index.html")
-path.write_text(html, encoding="utf-8")
-print(f"فایل ساخته شد: {path} | حجم: {path.stat().st_size:,} بایت")
